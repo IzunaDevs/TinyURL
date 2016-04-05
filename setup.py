@@ -14,11 +14,11 @@ readme = 'TinyURL lib for Python 3.x.'
 
 setup(name='TinyURL',
       author='Decorater',
-      url='None', #None for right now till I make a Repo for TinyURL for Python 3.x.
+      url='https://github.com/AraHaan/TinyURL', #None for right now till I make a Repo for TinyURL for Python 3.x.
       version=version,
       packages=['TinyURL'],
       license='MIT',
-      description='Core Module for DecoraterBot',
+      description='TinyURL for Python 3.x',
       long_description=readme,
       include_package_data=True,
       install_requires=requirements,
