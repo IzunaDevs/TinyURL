@@ -5,6 +5,8 @@ import optparse
 from .errors import *
 
 API_CREATE = "http://tinyurl.com/api-create.php"
+# This is for setting a Alias in a url. This second one is needed (for if you want to customize the shortened url).
+API_CREATE2 = "http://tinyurl.com/create.php?source=indexpage&url={0}&submit=Make+TinyURL%21&alias={1}"
 DEFAULT_DELIM = "\n"
 USAGE = """%prog [options] url [url url ...]
  
@@ -27,14 +29,23 @@ def _build_option_parser():
     return prs
 
 
-def create_one(url):
-    if url != '':
+def create_one(url, alias=None):
+    if url != '' and url is not None:
         if url.startswith('http://') or url.startswith('https://') or url.startswith('ftp://'):
-            url_data = urllib.parse.urlencode(dict(url=url))
-            byte_data = str.encode(url_data)
-            ret = urllib.request.urlopen(API_CREATE, data=byte_data).read().strip()
-            result = str(ret).strip("b").strip("'")
-            return result
+            if alias is not None:
+                if alias != '':
+                    url_code = API_CREATE2.format(url, alias)
+                    ret = urllib.request.urlopen(url_code, data=url_code).read()
+                    result = str(ret).replace("b", "").replace("'", "")
+                    return result
+                else:
+                    raise InvalidAlias('The given Alias cannot be \'empty\'.')
+            else:
+                url_data = urllib.parse.urlencode(dict(url=url))
+                byte_data = str.encode(url_data)
+                ret = urllib.request.urlopen(API_CREATE, data=byte_data).read()
+                result = str(ret).replace("b", "").replace("'", "")
+                return result
         else:
             raise InvalidURL('The given URL is invalid.')
     else:
