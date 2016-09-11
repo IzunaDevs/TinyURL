@@ -39,12 +39,12 @@ def _build_option_parser():
 class TinyURL:
     def __init__(self, alias, debug):
         self.loop = asyncio.get_event_loop()
-        self.createsession(alias, debug)
-
-    def createsession(self, alias, debug):
-        self.session = aiohttp.ClientSession()
         self.alias = alias
         self.debug = debug
+        self.createsession()
+
+    def createsession(self):
+        self.session = aiohttp.ClientSession(loop=self.loop)
 
     @asyncio.coroutine
     def closesession(self):
