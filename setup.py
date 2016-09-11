@@ -5,7 +5,7 @@ requirements = []
 with open('requirements.txt') as f:
   requirements = f.read().splitlines()
 
-version = '0.1.4'
+version = '0.1.5'
 
 if not version:
     raise RuntimeError('version is not set')

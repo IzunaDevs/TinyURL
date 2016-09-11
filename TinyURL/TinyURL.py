@@ -36,9 +36,9 @@ def create_one(url):
             result = str(ret).strip("b").strip("'")
             return result
         else:
-            InvalidURL('The given URL is invalid.')
+            raise InvalidURL('The given URL is invalid.')
     else:
-        URLError('The given URL Cannot be \'empty\'.')
+        raise URLError('The given URL Cannot be \'empty\'.')
 
 
 def create(*urls):
