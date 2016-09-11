@@ -58,7 +58,7 @@ class TinyURL:
                 if self.alias is not None:
                     if self.alias != '':
                         url_code = API_CREATE2.format(url, self.alias)
-                        with self.session.ws_connect(API_CREATE) as ws:
+                        with self.session.ws_connect(API_CREATE2) as ws:
                             yield from ws.post(url_code, data=url_code)
                             #ret = urllib.request.urlopen(url_code, data=url_code).read()
                             #result = str(ret).replace("b", "").replace("'", "")
