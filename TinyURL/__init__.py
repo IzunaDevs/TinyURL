@@ -17,8 +17,8 @@ __title__ = 'TinyURL'
 __author__ = 'Decorater'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2016 Decorater'
-__version__ = '0.1.1'
-__build__ = 0x000101
+__version__ = '0.1.3'
+__build__ = 0x000103
 
 try:
     from logging import NullHandler
