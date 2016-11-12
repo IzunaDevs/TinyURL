@@ -10,7 +10,7 @@ except Exception as ex:
     with open('TinyURL3.egg-info\requires.txt') as f:
         requirements = f.read().splitlines()
 
-version = '0.1.6'
+version = '0.1.7'
 
 if not version:
     raise RuntimeError('version is not set')
@@ -22,6 +22,7 @@ setup(name='TinyURL3',
       author='Decorater',
       author_email='seandhunt_7@yahoo.com',
       url='https://github.com/AraHaan/TinyURL',
+      bugtrack_url='https://github.com/AraHaan/TinyURL/issues',
       version=version,
       packages=['TinyURL'],
       license='MIT',
@@ -31,6 +32,7 @@ setup(name='TinyURL3',
       download_url='https://github.com/AraHaan/TinyURL',
       include_package_data=True,
       install_requires=requirements,
+      platforms='Any',
       classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
