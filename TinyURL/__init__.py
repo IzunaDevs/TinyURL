@@ -10,7 +10,7 @@ TinyURL for Python 3.x
 :license: MIT, see LICENSE for more details.
 
 """
-from .TinyURL import TinyURL
+from .TinyURL import create_one, create
 import logging
 
 __title__ = 'TinyURL'

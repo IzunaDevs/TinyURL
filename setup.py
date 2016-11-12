@@ -2,6 +2,7 @@ from setuptools import setup
 import re
 
 requirements = []
+# since v0.1.6 this requires beautifulsoup4.
 with open('requirements.txt') as f:
   requirements = f.read().splitlines()
 
@@ -14,7 +15,7 @@ readme = 'TinyURL lib for Python 3.x.'
 
 setup(name='TinyURL3',
       author='Decorater',
-      url='https://github.com/Cheeselab/TinyURL',
+      url='https://github.com/AraHaan/TinyURL',
       version=version,
       packages=['TinyURL'],
       license='MIT',
