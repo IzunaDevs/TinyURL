@@ -25,20 +25,35 @@ DEALINGS IN THE SOFTWARE.
 
 
 class TinyURLErrors(Exception):
+    """
+    Base Exception Class.
+    """
     pass
 
 
 class URLError(TinyURLErrors):
+    """
+    For URL Errors.
+    """
     pass
 
 
 class InvalidURL(TinyURLErrors):
+    """
+    For Invalid URL's.
+    """
     pass
 
 
 class InvalidAlias(TinyURLErrors):
+    """
+    For Invalid Aliases.
+    """
     pass
 
 
 class AliasUsed(TinyURLErrors):
+    """
+    For already used Aliases.
+    """
     pass

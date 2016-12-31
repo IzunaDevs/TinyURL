@@ -23,15 +23,25 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 import sys
-import urllib.request
-import urllib.parse
+try:
+    import urllib.request
+    import urllib.parse
+except ImportError:
+    import urllib
 from bs4 import BeautifulSoup
 import optparse
+import re
 from .errors import *
+try:
+    parse_helper = urllib.parse
+except AttributeError:
+    parse_helper = urllib
+try:
+    request_helper = urllib.request
+except AttributeError:
+    request_helper = urllib
 
-API_CREATE = "http://tinyurl.com/api-create.php"
-# This is for setting a Alias in a url. This second one is needed (for if you want to customize the shortened url).
-API_CREATE2 = "http://tinyurl.com/create.php?"
+API_CREATE_LIST = ["http://tinyurl.com/api-create.php", "http://tinyurl.com/create.php?"]
 DEFAULT_DELIM = "\n"
 USAGE = """%prog [options] url [url url ...]
  
@@ -40,6 +50,9 @@ Any number of urls may be passed and will be returned
 in order with the given delimiter, default=%r
  % DEFAULT_DELIM
 """
+pattern = '(arp|dns|dsn|imap|http|sftp|ftp|icmp|idrp|ip|irc|pop3|par|rlogin|smtp|ssl|ssh|tcp|telnet|upd|up|file|git)(' \
+          's?):\/\/[\/]?'
+
 ALL_OPTIONS = (
     (('-d', '--delimiter'), 
         dict(dest='delimiter', default=DEFAULT_DELIM, 
@@ -55,8 +68,16 @@ def _build_option_parser():
 
 
 def create_one(url, alias=None):
+    """
+    Shortens a URL using the TinyURL API.
+    :param url: URL.
+    :param alias: Alias.
+    :return: Shortened URL.
+    """
     if url != '' and url is not None:
-        if url.startswith('http://') or url.startswith('https://') or url.startswith('ftp://'):
+        regex = re.compile(pattern)
+        searchres = regex.search(url)
+        if searchres is not None:
             if alias is not None:
                 if alias != '':
                     payload = {
@@ -64,9 +85,9 @@ def create_one(url, alias=None):
                         'submit': 'Make TinyURL!',
                         'alias': alias
                     }
-                    data = urllib.parse.urlencode(payload)
-                    full_url = API_CREATE2 + data
-                    ret = urllib.request.urlopen(full_url)
+                    data = parse_helper.urlencode(payload)
+                    full_url = API_CREATE_LIST[1] + data
+                    ret = request_helper.urlopen(full_url)
                     soup = BeautifulSoup(ret, 'html.parser')
                     check_error = soup.p.b.string
                     if "The custom alias" in check_error:
@@ -76,9 +97,9 @@ def create_one(url, alias=None):
                 else:
                     raise InvalidAlias('The given Alias cannot be \'empty\'.')
             else:
-                url_data = urllib.parse.urlencode(dict(url=url))
+                url_data = parse_helper.urlencode(dict(url=url))
                 byte_data = str.encode(url_data)
-                ret = urllib.request.urlopen(API_CREATE, data=byte_data).read()
+                ret = request_helper.urlopen(API_CREATE_LIST[0], data=byte_data).read()
                 result = str(ret).replace("b", "").replace("'", "")
                 return result
         else:
@@ -88,17 +109,22 @@ def create_one(url, alias=None):
 
 
 def create(*urls):
+    """
+    Shortens URL's
+    :param urls: Url list.
+    :return: Shortened URL's
+    """
     for url in urls:
         yield create_one(url)
 
 
 def main(sysargs=sys.argv[:]):
+    """
+    Entry Point.
+    :param sysargs: Args.
+    :return: Nothing.
+    """
     parser = _build_option_parser()
     opts, urls = parser.parse_args(sysargs[1:])
     for url in create(*urls):
         sys.stdout.write(url + opts.delimiter)
-    return 0
-
-
-if __name__ == '__main__':
-    sys.exit(main())

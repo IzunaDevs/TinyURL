@@ -10,7 +10,7 @@ except Exception as ex:
     with open('TinyURL3.egg-info\requires.txt') as f:
         requirements = f.read().splitlines()
 
-version = '0.1.7'
+version = '0.1.8'
 
 if not version:
     raise RuntimeError('version is not set')
@@ -47,7 +47,8 @@ setup(name='TinyURL3',
         'Intended Audience :: Developers',
         'Natural Language :: English',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3 :: Only',
+        'Programming Language :: Python :: 2.x',
+        'Programming Language :: Python :: 3.x',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities',
