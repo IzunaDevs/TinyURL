@@ -1,3 +1,5 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/96b57a1e85ee438da862574637aaec3c)](https://www.codacy.com/app/AraHaan/TinyURL?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AraHaan/TinyURL&amp;utm_campaign=Badge_Grade)
+
 The ``TinyUrl`` package provides a few useful functions for 
 Modded for ``Python 3.x`` Support.
 use from within python code:: 
