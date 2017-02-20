@@ -24,7 +24,4 @@ use, as in shell scripts or <whatever>... ::
     $ echo $GOOGLE_URL
     http://tinyurl.com/8kp
 
-
 Much love to the folks at `tinyurl.com <http://tinyurl.com>`_!
-
-.. vim:filetype=rst
