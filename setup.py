@@ -14,7 +14,7 @@ version = '0.1.8'
 if not version:
     raise RuntimeError('version is not set')
 
-with open('README') as f:
+with open('README.md') as f:
     readme = f.read()
 
 setup(name='TinyURL3',
