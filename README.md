@@ -2,9 +2,8 @@
 [![PyPI](https://img.shields.io/pypi/pyversions/TinyURL3.svg)](https://pypi.python.org/pypi/TinyURL3/)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/96b57a1e85ee438da862574637aaec3c)](https://www.codacy.com/app/AraHaan/TinyURL?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AraHaan/TinyURL&amp;utm_campaign=Badge_Grade)
 
-The ``TinyUrl`` package provides a few useful functions for 
-Modded for ``Python 3.x`` Support.
-use from within python code:: 
+The ``TinyURL3`` package provides a few useful functions for 
+use from within python code and was modded for ``Python 3.x`` Support.:: 
 
     >>> import TinyUrl
     >>> TinyUrl.TinyUrl.create_one('http://google.com/')
