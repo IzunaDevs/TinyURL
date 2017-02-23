@@ -41,7 +41,8 @@ try:
 except AttributeError:
     request_helper = urllib
 
-API_CREATE_LIST = ["http://tinyurl.com/api-create.php", "http://tinyurl.com/create.php?"]
+API_CREATE_LIST = ["http://tinyurl.com/api-create.php",
+                   "http://tinyurl.com/create.php?"]
 DEFAULT_DELIM = "\n"
 USAGE = """%prog [options] url [url url ...]
  
@@ -50,14 +51,12 @@ Any number of urls may be passed and will be returned
 in order with the given delimiter, default=%r
  % DEFAULT_DELIM
 """
-pattern = '(arp|dns|dsn|imap|http|sftp|ftp|icmp|idrp|ip|irc|pop3|par|rlogin|smtp|ssl|ssh|tcp|telnet|upd|up|file|git)(' \
-          's?):\/\/[\/]?'
+pattern = '(arp|dns|dsn|imap|http|sftp|ftp|icmp|idrp|ip|irc|pop3|par|rlogin' \
+          '|smtp|ssl|ssh|tcp|telnet|upd|up|file|git)(s?):\/\/[\/]? '
 
-ALL_OPTIONS = (
-    (('-d', '--delimiter'), 
-        dict(dest='delimiter', default=DEFAULT_DELIM, 
-             help='delimiter for returned results')),
-)
+ALL_OPTIONS = ((('-d', '--delimiter'), dict(
+    dest='delimiter', default=DEFAULT_DELIM,
+    help='delimiter for returned results')),)
 
 
 def _build_option_parser():
@@ -91,15 +90,19 @@ def create_one(url, alias=None):
                     soup = BeautifulSoup(ret, 'html.parser')
                     check_error = soup.p.b.string
                     if "The custom alias" in check_error:
-                        raise AliasUsed('The given Alias you have provided is already bwing used.')
+                        raise AliasUsed(
+                            'The given Alias you have provided is already'
+                            ' being used.')
                     else:
-                        return soup.find_all('div', {'class': 'indent'})[1].b.string
+                        return soup.find_all('div', {'class': 'indent'}
+                                             )[1].b.string
                 else:
                     raise InvalidAlias('The given Alias cannot be \'empty\'.')
             else:
                 url_data = parse_helper.urlencode(dict(url=url))
                 byte_data = str.encode(url_data)
-                ret = request_helper.urlopen(API_CREATE_LIST[0], data=byte_data).read()
+                ret = request_helper.urlopen(API_CREATE_LIST[0],
+                                             data=byte_data).read()
                 result = str(ret).replace("b", "").replace("'", "")
                 return result
         else:

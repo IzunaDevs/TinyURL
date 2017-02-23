@@ -22,21 +22,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import sys
-from .TinyURL import create_one, create, main
 from . import errors
-import logging
+from .TinyURL import create_one, create, main
 
-"""
-TinyURL
-~~~~~~~~~~~~~~~~~~~
+# TinyURL
+# ~~~~~~~~~~~~~~~~~~~
+# 
+# TinyURL for Python 3.x
+# 
+# :copyright: (c) 2016 Decorater
+# :license: MIT, see LICENSE for more details.
+# 
 
-TinyURL for Python 3.x
-
-:copyright: (c) 2016 Decorater
-:license: MIT, see LICENSE for more details.
-
-"""
 
 __title__ = 'TinyURL'
 __author__ = 'Decorater'
@@ -45,16 +42,6 @@ __copyright__ = 'Copyright 2016 Decorater'
 __version__ = '0.1.8'
 __build__ = 0x000108
 
-try:
-    from logging import NullHandler
-except ImportError:
-    class NullHandler(logging.Handler):
-        """..."""
-        def emit(self, record):
-            """..."""
-            pass
-
-logging.getLogger(__name__).addHandler(NullHandler())
 
 if __name__ == '__main__':
     main()
