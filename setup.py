@@ -1,5 +1,4 @@
 from setuptools import setup
-import re
 
 requirements = []
 # since v0.1.6 this requires beautifulsoup4.
