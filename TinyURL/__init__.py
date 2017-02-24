@@ -27,12 +27,11 @@ from .TinyURL import create_one, create, main
 
 # TinyURL
 # ~~~~~~~~~~~~~~~~~~~
-# 
+
 # TinyURL for Python 3.x
-# 
+
 # :copyright: (c) 2016 Decorater
 # :license: MIT, see LICENSE for more details.
-# 
 
 
 __title__ = 'TinyURL'
