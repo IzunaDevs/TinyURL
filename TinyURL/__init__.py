@@ -38,8 +38,8 @@ __title__ = 'TinyURL'
 __author__ = 'Decorater'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2016 Decorater'
-__version__ = '0.1.8'
-__build__ = 0x000108
+__version__ = '0.1.9'
+__build__ = 0x000109
 
 
 if __name__ == '__main__':
