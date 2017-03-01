@@ -52,7 +52,7 @@ in order with the given delimiter, default=%r
  % DEFAULT_DELIM
 """
 pattern = '(arp|dns|dsn|imap|http|sftp|ftp|icmp|idrp|ip|irc|pop3|par|rlogin' \
-          '|smtp|ssl|ssh|tcp|telnet|upd|up|file|git)(s?):\/\/[\/]? '
+          '|smtp|ssl|ssh|tcp|telnet|upd|up|file|git)(s?):\/\/[\/]?'
 
 ALL_OPTIONS = ((('-d', '--delimiter'), dict(
     dest='delimiter', default=DEFAULT_DELIM,
