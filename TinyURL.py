@@ -2,7 +2,7 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015 Decorater
+Copyright (c) 2015-2017 Decorater
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -31,7 +31,6 @@ except ImportError:
 from bs4 import BeautifulSoup
 import optparse
 import re
-from .errors import *
 try:
     parse_helper = urllib.parse
 except AttributeError:
@@ -41,8 +40,46 @@ try:
 except AttributeError:
     request_helper = urllib
 
-API_CREATE_LIST = ["http://tinyurl.com/api-create.php",
-                   "http://tinyurl.com/create.php?"]
+
+class errors:
+    """
+    Holds all error Classes.
+    """
+
+    class TinyURLErrors(Exception):
+        """
+        Base Exception Class.
+        """
+        pass
+
+    class URLError(TinyURLErrors):
+        """
+        For URL Errors.
+        """
+        pass
+
+    class InvalidURL(TinyURLErrors):
+        """
+        For Invalid URL's.
+        """
+        pass
+
+    class InvalidAlias(TinyURLErrors):
+        """
+        For Invalid Aliases.
+        """
+        pass
+
+    class AliasUsed(TinyURLErrors):
+        """
+        For already used Aliases.
+        """
+        pass
+
+
+API_CREATE_LIST = [
+    "http://tinyurl.com/api-create.php",
+    "http://tinyurl.com/create.php?"]
 DEFAULT_DELIM = "\n"
 USAGE = """%prog [options] url [url url ...]
  
@@ -51,8 +88,8 @@ Any number of urls may be passed and will be returned
 in order with the given delimiter, default=%r
  % DEFAULT_DELIM
 """
-pattern = '(arp|dns|dsn|imap|http|sftp|ftp|icmp|idrp|ip|irc|pop3|par|rlogin' \
-          '|smtp|ssl|ssh|tcp|telnet|upd|up|file|git)(s?):\/\/[\/]?'
+pattern = "(arp|dns|dsn|imap|http|sftp|ftp|icmp|idrp|ip|irc|pop3|par|rlogin" \
+          "|smtp|ssl|ssh|tcp|telnet|upd|up|file|git)(s?):\/\/[\/]?"
 
 ALL_OPTIONS = ((('-d', '--delimiter'), dict(
     dest='delimiter', default=DEFAULT_DELIM,
@@ -89,26 +126,28 @@ def create_one(url, alias=None):
                     ret = request_helper.urlopen(full_url)
                     soup = BeautifulSoup(ret, 'html.parser')
                     check_error = soup.p.b.string
-                    if "The custom alias" in check_error:
-                        raise AliasUsed(
+                    if 'The custom alias' in check_error:
+                        raise errors.AliasUsed(
                             'The given Alias you have provided is already'
                             ' being used.')
                     else:
-                        return soup.find_all('div', {'class': 'indent'}
-                                             )[1].b.string
+                        return soup.find_all(
+                            'div', {'class': 'indent'}
+                            )[1].b.string
                 else:
-                    raise InvalidAlias('The given Alias cannot be \'empty\'.')
+                    raise errors.InvalidAlias(
+                        'The given Alias cannot be \'empty\'.')
             else:
                 url_data = parse_helper.urlencode(dict(url=url))
                 byte_data = str.encode(url_data)
-                ret = request_helper.urlopen(API_CREATE_LIST[0],
-                                             data=byte_data).read()
-                result = str(ret).replace("b", "").replace("'", "")
+                ret = request_helper.urlopen(
+                    API_CREATE_LIST[0], data=byte_data).read()
+                result = str(ret).replace('b', '').replace('\'', '')
                 return result
         else:
-            raise InvalidURL('The given URL is invalid.')
+            raise errors.InvalidURL('The given URL is invalid.')
     else:
-        raise URLError('The given URL Cannot be \'empty\'.')
+        raise errors.URLError('The given URL Cannot be \'empty\'.')
 
 
 def create(*urls):
@@ -129,5 +168,21 @@ def main(sysargs=sys.argv[:]):
     """
     parser = _build_option_parser()
     opts, urls = parser.parse_args(sysargs[1:])
-    for url in create(*urls):
-        sys.stdout.write(url + opts.delimiter)
+    try:
+        for url in create(*urls):
+            sys.stdout.write(url + opts.delimiter)
+    except Exception as ex:
+        print('Error: ' + str(ex))
+
+
+__title__ = 'TinyURL'
+__author__ = 'Decorater'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2015-2017 Decorater'
+__version__ = '0.1.10'
+__build__ = 0x0001010
+
+
+if __name__ == '__main__':
+    sys.dont_write_bytecode = True
+    main()
