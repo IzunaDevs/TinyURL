@@ -88,8 +88,8 @@ Any number of urls may be passed and will be returned
 in order with the given delimiter, default=%r
  % DEFAULT_DELIM
 """
-pattern = "(arp|dns|dsn|imap|http|sftp|ftp|icmp|idrp|ip|irc|pop3|par|rlogin" \
-          "|smtp|ssl|ssh|tcp|telnet|upd|up|file|git)(s?):\/\/[\/]?"
+pattern = "(arp|dns|dsn|imap|http|sftp|ftp|icmp|idrp|ip|irc|pop3|par|rlogin"
+pattern += "|smtp|ssl|ssh|tcp|telnet|upd|up|file|git)(s?):\/\/[\/]?"
 
 ALL_OPTIONS = ((('-d', '--delimiter'), dict(
     dest='delimiter', default=DEFAULT_DELIM,
@@ -128,26 +128,26 @@ def create_one(url, alias=None):
                     check_error = soup.p.b.string
                     if 'The custom alias' in check_error:
                         raise errors.AliasUsed(
-                            'The given Alias you have provided is already'
-                            ' being used.')
+                            "The given Alias you have provided is already"
+                            " being used.")
                     else:
                         return soup.find_all(
                             'div', {'class': 'indent'}
                             )[1].b.string
                 else:
                     raise errors.InvalidAlias(
-                        'The given Alias cannot be \'empty\'.')
+                        "The given Alias cannot be 'empty'.")
             else:
                 url_data = parse_helper.urlencode(dict(url=url))
                 byte_data = str.encode(url_data)
                 ret = request_helper.urlopen(
                     API_CREATE_LIST[0], data=byte_data).read()
-                result = str(ret).replace('b', '').replace('\'', '')
+                result = str(ret).replace('b', '').replace("\'", '')
                 return result
         else:
-            raise errors.InvalidURL('The given URL is invalid.')
+            raise errors.InvalidURL("The given URL is invalid.")
     else:
-        raise errors.URLError('The given URL Cannot be \'empty\'.')
+        raise errors.URLError("The given URL Cannot be 'empty'.")
 
 
 def create(*urls):
@@ -172,7 +172,7 @@ def main(sysargs=sys.argv[:]):
         for url in create(*urls):
             sys.stdout.write(url + opts.delimiter)
     except Exception as ex:
-        print('Error: ' + str(ex))
+        print("Error: " + str(ex))
 
 
 __title__ = 'TinyURL'

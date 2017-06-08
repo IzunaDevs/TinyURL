@@ -63,12 +63,13 @@ def generate_tinyurl_c():
     info += '      fprintf(stderr, "Fatal error: Python script is empty.\\n");\n'
     info += '    }\n'
     info += '#else\n'
-    info += '    /* TODO: make PySys_SetArgvEx no crash here to use. */\n'
+    info += '    /* TODO: make PySys_SetArgvEx must not crash here to use. */\n'
+    info += '    #error "PySys_SetArgvEx must not crash here to use for this platform."\n'
     info += '    err = PyRun_SimpleString("'
     with open('../TinyURL.py', 'r') as f:
         data = f.read().splitlines()
         for line in data:
-            info += line.replace('"', '\\"').replace('\n', '\\n')
+            info += line.replace('"', '\\"').replace('\\n', '\\\\n').replace("\\'", "\\\\'")
             info += '\\n"\n                                 "'
     info += '");\n'
     info += '#endif\n'
