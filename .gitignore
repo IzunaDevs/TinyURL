@@ -15,6 +15,10 @@ var/
 sdist/
 develop-eggs/
 .installed.cfg
+app/TinyURL.c
+app/Release/
+app/x64/
+app/.vs/
 
 # Installer logs
 pip-log.txt
