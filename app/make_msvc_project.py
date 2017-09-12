@@ -29,6 +29,7 @@ def generate_tinyurl_rc():
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -70,7 +71,22 @@ IDI_MAINICON            ICON                    \"rocket.ico\"
 //
 // RCDATA
 //
-IDR_RCDATA1            RCDATA                    \"__main__.py\"
+
+IDR_RCDATA1             RCDATA                  \"__main__.py\"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_STRING1             \"Fatal error: out of memory\\n\"
+    IDS_STRING2             \"Fatal error: unable to decode the command line argument #%i\\n\"
+    IDS_STRING3             \"Fatal error: Python script is empty.\\n\"
+    IDS_STRING4             \"Fatal error: Python is not initialized.\\n\"
+END
 
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
@@ -99,6 +115,10 @@ def generate_resource_h():
 //
 #define IDI_MAINICON                    1
 #define IDR_RCDATA1                     1
+#define IDS_STRING1                     1
+#define IDS_STRING2                     2
+#define IDS_STRING3                     3
+#define IDS_STRING4                     4
 
 // Next default values for new objects
 // 

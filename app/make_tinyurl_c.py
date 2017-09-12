@@ -44,23 +44,34 @@ main(int argc, char *argv[])
   int i;
   argv_copy = (wchar_t **)PyMem_RawMalloc(sizeof(wchar_t*) * (argc+1));
   if (!argv_copy) {
-    fprintf(stderr, "out of memory\\n");
+#ifdef _WIN32
+    LPSTR buffer1[28];
+    LoadString(GetModuleHandle(NULL), IDS_STRING1, (LPSTR)buffer1, 28);
+    fprintf(stderr, (const char *const)buffer1);
+#else
+    fprintf(stderr, "Fatal error: out of memory\\n");
+#endif
     exit(1);
   }
   for (i = 0; i < argc; i++) {
     argv_copy[i] = Py_DecodeLocale(argv[i], NULL);
     if (!argv_copy[i]) {
+#ifdef _WIN32
+      LPSTR buffer2[61];
+      LoadString(GetModuleHandle(NULL), IDS_STRING2, (LPSTR)buffer2, 61);
+      fprintf(stderr, (const char *const)buffer2, i + 1);
+#else
       fprintf(stderr, "Fatal error: "
                       "unable to decode the command line argument #%i\\n",
                       i + 1);
+#endif
       exit(1);
     }
   }
   argv_copy[argc] = NULL;
   Py_SetProgramName(argv_copy[0]);
   Py_Initialize();
-  int initialized = Py_IsInitialized();
-  if (initialized != 0) {
+  if (Py_IsInitialized() != 0) {
     /*
      * allows use of sys.argv to be possible
      * with no tracebacks.
@@ -75,7 +86,9 @@ main(int argc, char *argv[])
     if (script_size >= 0) {
       err = PyRun_SimpleString((const char *)pmain_script);
     } else {
-      fprintf(stderr, "Fatal error: Python script is empty.\\n");
+      LPSTR buffer3[38];
+      LoadString(GetModuleHandle(NULL), IDS_STRING3, (LPSTR)buffer3, 38);
+      fprintf(stderr, (const char *const)buffer3);
     }
 #else
     err = PyRun_SimpleString(\""""
@@ -90,7 +103,13 @@ main(int argc, char *argv[])
       PyErr_Print();
     Py_Finalize();
   } else {
+#ifdef _WIN32
+    LPSTR buffer4[41];
+    LoadString(GetModuleHandle(NULL), IDS_STRING4, (LPSTR)buffer4, 41);
+    fprintf(stderr, (const char *const)buffer4);
+#else
     fprintf(stderr, "Fatal error: Python is not initialized.\\n");
+#endif
   }
   for (i = 0; i < argc; i++) {
     PyMem_RawFree(argv_copy[i]);

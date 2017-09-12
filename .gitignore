@@ -26,6 +26,7 @@ app/TinyURL.rc
 app/TinyURL.sln
 app/TinyURL.vcxproj
 app/TinyURL.vcxproj.filters
+app/__main__.py
 
 # Installer logs
 pip-log.txt
