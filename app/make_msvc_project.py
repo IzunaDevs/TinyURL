@@ -9,6 +9,89 @@ def _write_file(filename, data):
         of.write(data)
 
 
+def generate_tinyurl_rc():
+    info = """// Microsoft Visual C++ generated resource script.
+//
+#include \"resource.h\"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include \"winres.h\"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    \"resource.h\\0\"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    \"#include \"\"winres.h\"\"\\r\\n\"
+    \"\\0\"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    \"\\r\\n\"
+    \"\\0\"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_MAINICON            ICON                    \"rocket.ico\"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RCDATA
+//
+IDR_RCDATA1            RCDATA                    \"__main__.py\"
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
+"""
+    with open('TinyURL.rc', 'w', encoding='utf-16-le') as of:
+        of.write(info)
+
+
 def generate_resource_h():
     info = """//{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
@@ -247,6 +330,7 @@ def generate_tinyurl_vcxproj_filters():
     _write_file('TinyURL.vcxproj.filters', info)
 
 def main():
+    generate_tinyurl_rc()
     generate_resource_h()
     generate_tinyurl_sln()
     generate_tinyurl_vcxproj()

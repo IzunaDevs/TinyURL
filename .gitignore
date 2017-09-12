@@ -22,6 +22,7 @@ app/.vs/
 # auto generated files
 app/TinyURL.c
 app/resource.h
+app/TinyURL.rc
 app/TinyURL.sln
 app/TinyURL.vcxproj
 app/TinyURL.vcxproj.filters
