@@ -2,6 +2,26 @@
 Makes TinyURL.c for an standalone
 python application.
 """
+import os
+
+
+def _write_file(filename, data):
+    with open(filename, 'w') as of:
+        of.write(data)
+
+
+def generate_main_py():
+    info = """# -*- coding: utf-8 -*-
+\"\"\"
+Main entrypoint to run TinyURL in
+an Embedded Python Interpreter.
+\"\"\"
+import TinyURL
+
+if __name__ == '__main__':
+    TinyURL.main()
+"""
+    _write_file('__main__.py', info)
 
 
 def generate_tinyurl_c():
@@ -78,11 +98,12 @@ main(int argc, char *argv[])
   return 0;
 }
 """
-    with open('TinyURL.c', 'w') as of:
-        of.write(info)
+    _write_file('TinyURL.c', info)
+    os.remove('__main__.py')
 
 
 def main():
+    generate_main_py()
     generate_tinyurl_c()
 
 main()
