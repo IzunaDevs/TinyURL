@@ -46,31 +46,25 @@ class errors:
     Holds all error Classes.
     """
 
-    class TinyURLErrors(Exception):
-        """
-        Base Exception Class.
-        """
-        pass
-
-    class URLError(TinyURLErrors):
+    class URLError(Exception):
         """
         For URL Errors.
         """
         pass
 
-    class InvalidURL(TinyURLErrors):
+    class InvalidURL(Exception):
         """
         For Invalid URL's.
         """
         pass
 
-    class InvalidAlias(TinyURLErrors):
+    class InvalidAlias(Exception):
         """
         For Invalid Aliases.
         """
         pass
 
-    class AliasUsed(TinyURLErrors):
+    class AliasUsed(Exception):
         """
         For already used Aliases.
         """
@@ -81,12 +75,14 @@ API_CREATE_LIST = [
     "http://tinyurl.com/api-create.php",
     "http://tinyurl.com/create.php?"]
 DEFAULT_DELIM = "\n"
-USAGE = """%prog [options] url [url url ...]
- 
- + __doc__ + 
+USAGE = """TinyURL [options] url [url url ...]
+
+Options:
+
+-d / --delimiter
+
 Any number of urls may be passed and will be returned
-in order with the given delimiter, default=%r
- % DEFAULT_DELIM
+in order with the given delimiter, default=\\n
 """
 pattern = "(arp|dns|dsn|imap|http|sftp|ftp|icmp|idrp|ip|irc|pop3|par|rlogin"
 pattern += "|smtp|ssl|ssh|tcp|telnet|upd|up|file|git)(s?):\/\/[\/]?"
@@ -106,9 +102,6 @@ def _build_option_parser():
 def create_one(url, alias=None):
     """
     Shortens a URL using the TinyURL API.
-    :param url: URL.
-    :param alias: Alias.
-    :return: Shortened URL.
     """
     if url != '' and url is not None:
         regex = re.compile(pattern)
@@ -153,26 +146,26 @@ def create_one(url, alias=None):
 def create(*urls):
     """
     Shortens URL's
-    :param urls: Url list.
-    :return: Shortened URL's
     """
     for url in urls:
         yield create_one(url)
 
 
-def main(sysargs=sys.argv[:]):
+def main():
     """
     Entry Point.
-    :param sysargs: Args.
-    :return: Nothing.
     """
-    parser = _build_option_parser()
-    opts, urls = parser.parse_args(sysargs[1:])
-    try:
-        for url in create(*urls):
-            sys.stdout.write(url + opts.delimiter)
-    except Exception as ex:
-        print("Error: " + str(ex))
+    if len(sys.argv) > 1:
+        sysargs = sys.argv[:]
+        parser = _build_option_parser()
+        opts, urls = parser.parse_args(sysargs[1:])
+        try:
+            for url in create(*urls):
+                sys.stdout.write(url + opts.delimiter)
+        except Exception as ex:
+            print("Error: " + str(ex))
+    else:
+        print(USAGE)
 
 
 __title__ = 'TinyURL'
@@ -184,5 +177,4 @@ __build__ = 0x0001010
 
 
 if __name__ == '__main__':
-    sys.dont_write_bytecode = True
     main()

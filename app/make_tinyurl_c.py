@@ -2,90 +2,82 @@
 Makes TinyURL.c for an standalone
 python application.
 """
-import sys
 
 
 def generate_tinyurl_c():
-    """
-    generates TinyURL.c.
-    """
-    info = '#include <Python.h>\n'
-    info += '#ifdef _WIN32\n'
-    info += '/*\n'
-    info += ' * for loading python script from the\n'
-    info += ' * resource section.\n'
-    info += ' */\n'
-    info += '#include <windows.h>\n'
-    info += '#include "resource.h"\n'
-    info += '#endif\n'
-    info += '\n'
-    info += 'int\n'
-    # info += '#ifdef _WIN32\n'
-    info += 'wmain(int argc, wchar_t *argv[])\n'
-    # info += '#else\n'
-    # info += 'main(int argc, char *argv[])\n'
-    # info += '#endif\n'
-    info += '{\n'
-    info += '  int err;\n'
-    info += '  wchar_t *program = Py_DecodeLocale(argv[0], NULL);\n'
-    info += '  if (program == NULL) {\n'
-    info += '    fprintf(stderr, "Fatal error: cannot decode argv[0]\\n");\n'
-    info += '    exit(1);\n'
-    info += '  }\n'
-    info += '  Py_SetProgramName(program);  /* optional but recommended */\n'
-    info += '  Py_Initialize();\n'
-    info += '  int initialized = Py_IsInitialized();\n'
-    info += '  if (initialized != 0) {\n'
-    info += '    /*\n'
-    info += '     * allows use of sys.argv to be possible\n'
-    info += '     * with no tracebacks.\n'
-    # info += '\n'
-    # info += '      Note: This is not possible to use in any other\n'
-    # info += '      platform for now until someone helps patch\n'
-    # info += '      this for me (I am not sure what to do to\n'
-    # info += '      make it work like this on them).\n'
-    info += '     */\n'
-    info += '    PySys_SetArgvEx(argc, argv, 0);\n'
-    info += '#ifdef _WIN32\n'
-    # info += '    /*\n'
-    # info += '      For now until I figure out loading the\n'
-    # info += '      text from resource section.\n'
-    # info += '    */\n'
-    info += '    HRSRC script_resource = FindResource(\n'
-    info += '      NULL, MAKEINTRESOURCE(IDR_RCDATA1), RT_RCDATA);\n'
-    info += '    unsigned int script_size = SizeofResource(NULL, script_resource);\n'
-    info += '    HGLOBAL main_script = LoadResource(NULL, script_resource);\n'
-    info += '    void* pmain_script = LockResource(main_script);\n'
-    info += '    if (script_size >= 0) {\n'
-    info += '      err = PyRun_SimpleString((const char *)pmain_script);\n'
-    info += '    } else {\n'
-    # info += '      /* python script is empty. */\n'
-    info += '      fprintf(stderr, "Fatal error: Python script is empty.\\n");\n'
-    info += '    }\n'
-    info += '#else\n'
-    # info += '    /* TODO: make PySys_SetArgvEx must not crash here to use. */\n'
-    # info += '    #error "PySys_SetArgvEx must not crash here to use for this platform."\n'
-    info += '    err = PyRun_SimpleString("'
-    with open('../TinyURL.py', 'r') as f:
+    info = """#include <Python.h>
+#ifdef _WIN32
+/*
+ * for loading python script from the
+ * resource section.
+ */
+#include <windows.h>
+#include "resource.h"
+#endif
+
+int
+main(int argc, char *argv[])
+{
+  int err;
+  wchar_t **argv_copy;
+  int i;
+  argv_copy = (wchar_t **)PyMem_RawMalloc(sizeof(wchar_t*) * (argc+1));
+  if (!argv_copy) {
+    fprintf(stderr, "out of memory\\n");
+    exit(1);
+  }
+  for (i = 0; i < argc; i++) {
+    argv_copy[i] = Py_DecodeLocale(argv[i], NULL);
+    if (!argv_copy[i]) {
+      fprintf(stderr, "Fatal error: "
+                      "unable to decode the command line argument #%i\\n",
+                      i + 1);
+      exit(1);
+    }
+  }
+  argv_copy[argc] = NULL;
+  Py_SetProgramName(argv_copy[0]);
+  Py_Initialize();
+  int initialized = Py_IsInitialized();
+  if (initialized != 0) {
+    /*
+     * allows use of sys.argv to be possible
+     * with no tracebacks.
+     */
+    PySys_SetArgvEx(argc, argv_copy, 0);
+#ifdef _WIN32
+    HRSRC script_resource = FindResource(
+      NULL, MAKEINTRESOURCE(IDR_RCDATA1), RT_RCDATA);
+    unsigned int script_size = SizeofResource(NULL, script_resource);
+    HGLOBAL main_script = LoadResource(NULL, script_resource);
+    void* pmain_script = LockResource(main_script);
+    if (script_size >= 0) {
+      err = PyRun_SimpleString((const char *)pmain_script);
+    } else {
+      fprintf(stderr, "Fatal error: Python script is empty.\\n");
+    }
+#else
+    err = PyRun_SimpleString(\""""
+    with open('__main__.py', 'r') as f:
         data = f.read().splitlines()
         for line in data:
             info += line.replace('"', '\\"').replace('\\n', '\\\\n').replace("\\'", "\\\\'")
             info += '\\n"\n                             "'
-    info += '");\n'
-    info += '#endif\n'
-    info += '    if (err > 0)\n'
-    info += '      PyErr_Print();\n'
-    info += '    Py_Finalize();\n'
-    # With these 2 lines python 3.5 compile will not be possible.
-    # info += '    if (Py_FinalizeEx() < 0)\n'
-    # info += '      exit(120);\n'
-    info += '  } else {\n'
-    # info += '    /* python is not initialized. */\n'
-    info += '    fprintf(stderr, "Fatal error: Python is not initialized.\\n");\n'
-    info += '  }\n'
-    info += '  PyMem_RawFree(program);\n'
-    info += '  return 0;\n'
-    info += '}\n'
+    info += """\");
+#endif
+    if (err > 0)
+      PyErr_Print();
+    Py_Finalize();
+  } else {
+    fprintf(stderr, "Fatal error: Python is not initialized.\\n");
+  }
+  for (i = 0; i < argc; i++) {
+    PyMem_RawFree(argv_copy[i]);
+  }
+  PyMem_RawFree(argv_copy);
+  return 0;
+}
+"""
     with open('TinyURL.c', 'w') as of:
         of.write(info)
 

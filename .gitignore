@@ -15,10 +15,16 @@ var/
 sdist/
 develop-eggs/
 .installed.cfg
-app/TinyURL.c
 app/Release/
 app/x64/
 app/.vs/
+
+# auto generated files
+app/TinyURL.c
+app/resource.h
+app/TinyURL.sln
+app/TinyURL.vcxproj
+app/TinyURL.vcxproj.filters
 
 # Installer logs
 pip-log.txt
