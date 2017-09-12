@@ -2,6 +2,7 @@
 Makes TinyURL.c for an standalone
 python application.
 """
+import sys
 import os
 
 
@@ -99,7 +100,8 @@ main(int argc, char *argv[])
 }
 """
     _write_file('TinyURL.c', info)
-    os.remove('__main__.py')
+    if not sys.platform == 'win32':
+        os.remove('__main__.py')
 
 
 def main():
