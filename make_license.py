@@ -1,6 +1,7 @@
 """
 Makes TinyURL LICENSE file.
 """
+import datetime
 
 
 def _write_file(filename, data):
@@ -35,7 +36,8 @@ DEALINGS IN THE SOFTWARE.
 
 
 def main():
-    generate_license('2015-2017', 'IzunaDevs')
+    now = datetime.datetime.now()
+    generate_license('2015-' + str(now.year), 'IzunaDevs')
 
 
 main()
